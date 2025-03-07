@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: postgres_pgvector
+    ports:
+      - "5432:5432"
+    env_file: .env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  db-init:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: db-init
+    env_file: .env
+    command:  sh -c "python semantic_search_api/local_database/database_setup.py && python semantic_search_api/database/data_ingestion.py --data_path small_test_data.jsonl"
+    environment:
+      - DATABASE_HOST=host.docker.internal
+    depends_on:
+      - db
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile  # optional if named "Dockerfile"
+    image: my-fastapi-app  # sets the image name
+    container_name: my-fastapi-container  # explicitly sets the container name
+    env_file: .env
+    environment:
+      - DATABASE_HOST=host.docker.internal
+    ports:
+      - "8000:8000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - data_volume:/data
+    depends_on:
+      - db-init
+
+volumes:
+  pgdata:
+  data_volume:

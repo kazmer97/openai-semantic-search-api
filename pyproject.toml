@@ -5,7 +5,12 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "fastapi>=0.115.11",
+    "aiofiles>=24.1.0",
+    "asyncpg>=0.30.0",
+    "click>=8.1.8",
+    "fastapi[standard]>=0.115.11",
+    "greenlet>=3.1.1",
+    "openai>=1.65.4",
     "pgvector>=0.3.6",
     "psycopg2-binary>=2.9.10",
     "ruff>=0.9.9",
@@ -14,11 +19,21 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "aiosqlite>=0.21.0",
     "ipykernel>=6.29.5",
     "pandas>=2.2.3",
+    "pytest>=8.3.5",
+    "pytest-asyncio>=0.25.3",
+    "pytest-cov>=6.0.0",
     "python-dotenv>=1.0.1",
 ]
 
 
 [tool.ruff.lint]
-select = ["F401"]
+select = ["F401", "E266"]
+
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "module"
+addopts = "--cov=semantic_search_api/ --cov-report=term-missing"

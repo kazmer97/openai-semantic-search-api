@@ -9,3 +9,9 @@ wheels/
 # Virtual environments
 .venv
 .ruff*/
+meta_Amazon_Fashion.jsonl
+.vscode/
+.env
+.coverage*
+.pytest*/
+.$*
